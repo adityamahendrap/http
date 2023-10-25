@@ -5,8 +5,9 @@ import (
 	"html/template"
 	"net/http"
 	"path"
-	gubrak "github.com/novalagung/gubrak/v2"
 	"time"
+
+	gubrak "github.com/novalagung/gubrak/v2"
 )
 
 func handlerCreateCookie(w http.ResponseWriter, r *http.Request) {
@@ -30,13 +31,13 @@ func handlerCreateCookie(w http.ResponseWriter, r *http.Request) {
 }
 
 func handlerDeleteCookie(w http.ResponseWriter, r *http.Request) {
-    c := &http.Cookie{}
-    c.Name = cookieName
-    c.Expires = time.Unix(0, 0)
-    c.MaxAge = -1
-    http.SetCookie(w, c)
+	c := &http.Cookie{}
+	c.Name = cookieName
+	c.Expires = time.Unix(0, 0)
+	c.MaxAge = -1
+	http.SetCookie(w, c)
 
-    http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 }
 
 func handlerIndex(w http.ResponseWriter, r *http.Request) {
@@ -50,52 +51,52 @@ func handlerHello(w http.ResponseWriter, r *http.Request) {
 }
 
 func handlerCool(w http.ResponseWriter, r *http.Request) {
-    var filepath = path.Join("views", "index.html")
-    templ, err := template.ParseFiles(filepath)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	var filepath = path.Join("views", "index.html")
+	templ, err := template.ParseFiles(filepath)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    var data = map[string]interface{} {
-        "title": "Learning Golang Web",
-        "name":  "Batman",
-    }
+	var data = map[string]interface{}{
+		"title": "Learning Golang Web",
+		"name":  "Batman",
+	}
 
-    err = templ.Execute(w, data)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-    }
+	err = templ.Execute(w, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func handlerUser(w http.ResponseWriter, r *http.Request) {
-    switch r.Method {
-        case "GET":
-            w.Write([]byte("get"))
-        case "POST":
-            w.Write([]byte("post"))
-        default:
-            http.Error(w, "", http.StatusBadRequest)
-    }
+	switch r.Method {
+	case "GET":
+		w.Write([]byte("get"))
+	case "POST":
+		w.Write([]byte("post"))
+	default:
+		http.Error(w, "", http.StatusBadRequest)
+	}
 }
 
 func handlerResponseJson(w http.ResponseWriter, r *http.Request) {
-    data := []struct {
-        Name string
-        Age  int
-    } {
-        { "Richard Grayson", 24 },
-        { "Jason Todd", 23 },
-        { "Tim Drake", 22 },
-        { "Damian Wayne", 21 },
-    }
+	data := []struct {
+		Name string
+		Age  int
+	}{
+		{"Richard Grayson", 24},
+		{"Jason Todd", 23},
+		{"Tim Drake", 22},
+		{"Damian Wayne", 21},
+	}
 
-    jsonByte, err := json.Marshal(data)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	jsonByte, err := json.Marshal(data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-    w.Header().Set("Conttent-Type", "application/json")
-    w.Write(jsonByte)
+	w.Header().Set("Conttent-Type", "application/json")
+	w.Write(jsonByte)
 }

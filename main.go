@@ -19,7 +19,7 @@ func (c *CustomMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var current http.Handler = &c.ServeMux
 
 	for _, next := range c.middlewares {
-			current = next(current)
+		current = next(current)
 	}
 
 	current.ServeHTTP(w, r)
@@ -27,24 +27,26 @@ func (c *CustomMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 const USERNAME = "test"
 const PASSWORD = "secret"
+
 type M map[string]interface{}
+
 var cookieName = "thisIsCookie"
 
 func main() {
-    mux := new(CustomMux)
+	mux := new(CustomMux)
 
-    mux.RegisterMiddleware(MiddlewareAuth)
+	mux.RegisterMiddleware(MiddlewareAuth)
 
-    mux.HandleFunc("/cookie", handlerCreateCookie)
-    mux.HandleFunc("/cookie/destroy", handlerDeleteCookie)
+	mux.HandleFunc("/cookie", handlerCreateCookie)
+	mux.HandleFunc("/cookie/destroy", handlerDeleteCookie)
 
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	mux.HandleFunc("/hello", handlerHello)
 	mux.HandleFunc("/", handlerIndex)
-    mux.HandleFunc("/users", handlerUser)
-    mux.HandleFunc("/json", handlerResponseJson)
+	mux.HandleFunc("/users", handlerUser)
+	mux.HandleFunc("/json", handlerResponseJson)
 	mux.HandleFunc("/index", handlerIndex)
-    mux.HandleFunc("/cool", handlerCool)
+	mux.HandleFunc("/cool", handlerCool)
 
 	var address = ":9000"
 	fmt.Printf("server started at http://localhost%s\n", address)
@@ -53,7 +55,7 @@ func main() {
 	server.Addr = address
 	server.ReadTimeout = time.Second * 10
 	server.WriteTimeout = time.Second * 10
-    server.Handler = mux
+	server.Handler = mux
 
 	err := server.ListenAndServe()
 	if err != nil {
